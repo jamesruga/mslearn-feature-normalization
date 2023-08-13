@@ -1,0 +1,1019 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Notebook}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{feature-scaling}{%
+\section{Feature Scaling}\label{feature-scaling}}
+
+Normalizing and standardizing are very similar techniques that change
+the range of values that a feature has. Doing so helps models learn
+faster and more robustly.
+
+Both of these processes are commonly referred to as \emph{feature
+scaling}.
+
+In this exercise, we'll use a dog training dataset to predict how many
+rescues a dog will perform on a given year, based on how old they were
+when their training began.
+
+We'll train models with and without feature scaling and compare their
+behavior and results.
+
+But first, let's load our dataset and inspect it:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{pandas}
+\PY{o}{!}wget\PY{+w}{ }https://raw.githubusercontent.com/MicrosoftDocs/mslearn\PYZhy{}introduction\PYZhy{}to\PYZhy{}machine\PYZhy{}learning/main/graphing.py
+\PY{o}{!}wget\PY{+w}{ }https://raw.githubusercontent.com/MicrosoftDocs/mslearn\PYZhy{}introduction\PYZhy{}to\PYZhy{}machine\PYZhy{}learning/main/Data/dog\PYZhy{}training.csv
+\PY{o}{!}wget\PY{+w}{ }https://raw.githubusercontent.com/MicrosoftDocs/mslearn\PYZhy{}introduction\PYZhy{}to\PYZhy{}machine\PYZhy{}learning/main/m1b\PYZus{}gradient\PYZus{}descent.py
+\PY{n}{data} \PY{o}{=} \PY{n}{pandas}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dog\PYZhy{}training.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{delimiter}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{data}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+--2023-08-10 14:33:22--
+https://raw.githubusercontent.com/MicrosoftDocs/mslearn-introduction-to-machine-
+learning/main/graphing.py
+Resolving raw.githubusercontent.com (raw.githubusercontent.com){\ldots}
+185.199.110.133, 185.199.111.133, 185.199.108.133, {\ldots}
+Connecting to raw.githubusercontent.com
+(raw.githubusercontent.com)|185.199.110.133|:443{\ldots} connected.
+HTTP request sent, awaiting response{\ldots} 200 OK
+Length: 21511 (21K) [text/plain]
+Saving to: ‘graphing.py’
+
+graphing.py         100\%[===================>]  21.01K  --.-KB/s    in 0.001s
+
+2023-08-10 14:33:22 (37.9 MB/s) - ‘graphing.py’ saved [21511/21511]
+
+--2023-08-10 14:33:24--
+https://raw.githubusercontent.com/MicrosoftDocs/mslearn-introduction-to-machine-
+learning/main/Data/dog-training.csv
+Resolving raw.githubusercontent.com (raw.githubusercontent.com){\ldots}
+185.199.109.133, 185.199.108.133, 185.199.111.133, {\ldots}
+Connecting to raw.githubusercontent.com
+(raw.githubusercontent.com)|185.199.109.133|:443{\ldots} connected.
+HTTP request sent, awaiting response{\ldots} 200 OK
+Length: 974 [text/plain]
+Saving to: ‘dog-training.csv’
+
+dog-training.csv    100\%[===================>]     974  --.-KB/s    in 0s
+
+2023-08-10 14:33:24 (92.9 MB/s) - ‘dog-training.csv’ saved [974/974]
+
+--2023-08-10 14:33:26--
+https://raw.githubusercontent.com/MicrosoftDocs/mslearn-introduction-to-machine-
+learning/main/m1b\_gradient\_descent.py
+Resolving raw.githubusercontent.com (raw.githubusercontent.com){\ldots}
+185.199.109.133, 185.199.108.133, 185.199.111.133, {\ldots}
+Connecting to raw.githubusercontent.com
+(raw.githubusercontent.com)|185.199.109.133|:443{\ldots} connected.
+HTTP request sent, awaiting response{\ldots} 200 OK
+Length: 2986 (2.9K) [text/plain]
+Saving to: ‘m1b\_gradient\_descent.py’
+
+m1b\_gradient\_descen 100\%[===================>]   2.92K  --.-KB/s    in 0s
+
+2023-08-10 14:33:26 (41.3 MB/s) - ‘m1b\_gradient\_descent.py’ saved [2986/2986]
+
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   month\_old\_when\_trained  mean\_rescues\_per\_year  age\_last\_year  \textbackslash{}
+0                      68                   21.1              9
+1                      53                   14.9              5
+2                      41                   20.5              6
+3                       3                   19.4              1
+4                       4                   24.9              4
+
+   weight\_last\_year  rescues\_last\_year
+0              14.5                 35
+1              14.0                 30
+2              17.7                 34
+3              13.7                 29
+4              18.4                 30
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The preceding dataset tells us at what age a dog began training, how
+many rescues they've performed on average per year, and other stats like
+their weight, what age they were last year, and how many rescues they
+performed in that period.
+
+Note that we also have variables expressed in different units, such as
+\texttt{month\_old\_when\_trained} in months, \texttt{age\_last\_year}
+in years, and \texttt{weight\_last\_year} in kilograms.
+
+Having features in widely different ranges and units is a good indicator
+that a model can benefit from feature scaling.
+
+First, let's train our model using the dataset ``as is:''
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{m1b\PYZus{}gradient\PYZus{}descent} \PY{k+kn}{import} \PY{n}{gradient\PYZus{}descent}
+\PY{k+kn}{import} \PY{n+nn}{numpy}
+\PY{k+kn}{import} \PY{n+nn}{graphing}
+
+\PY{c+c1}{\PYZsh{} Train model using Gradient Descent}
+\PY{c+c1}{\PYZsh{} This method uses custom code that will print out progress as training advances.}
+\PY{c+c1}{\PYZsh{} You don\PYZsq{}t need to inspect how this works for these exercises, but if you are}
+\PY{c+c1}{\PYZsh{} curious, you can find it in out GitHub repository}
+\PY{n}{model} \PY{o}{=} \PY{n}{gradient\PYZus{}descent}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{month\PYZus{}old\PYZus{}when\PYZus{}trained}\PY{p}{,} \PY{n}{data}\PY{o}{.}\PY{n}{mean\PYZus{}rescues\PYZus{}per\PYZus{}year}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{5E\PYZhy{}4}\PY{p}{,} \PY{n}{number\PYZus{}of\PYZus{}iterations}\PY{o}{=}\PY{l+m+mi}{8000}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration 0  Current estimate: y = 0.6551939999999999 * x + 0.01989 Cost:
+285.7519204585047
+Iteration 100  Current estimate: y = 0.3701770305121943 * x + 0.6317811959477301
+Cost: 151.37110592051562
+Iteration 200  Current estimate: y = 0.35765990734380276 * x +
+1.2334689463260078 Cost: 144.12794309730637
+Iteration 300  Current estimate: y = 0.3454643601625017 * x + 1.8196988051708256
+Cost: 137.25216617382307
+Iteration 400  Current estimate: y = 0.33358212739619614 * x +
+2.3908678994147348 Cost: 130.7251406940121
+Iteration 500  Current estimate: y = 0.32200515971990024 * x +
+2.9473631534474456 Cost: 124.52917737405625
+Iteration 600  Current estimate: y = 0.3107256146029201 * x + 3.4895615512281983
+Cost: 118.64748416158398
+Iteration 700  Current estimate: y = 0.29973585099612604 * x + 4.017830391664229
+Cost: 113.06412072651936
+Iteration 800  Current estimate: y = 0.2890284241557118 * x + 4.532527537428348
+Cost: 107.7639552602364
+Iteration 900  Current estimate: y = 0.2785960805999374 * x + 5.034001657384139
+Cost: 102.73262346593543
+Iteration 1000  Current estimate: y = 0.2684317531954367 * x + 5.522592462783105
+Cost: 97.95648962909937
+Iteration 1100  Current estimate: y = 0.2585285563697629 * x + 5.998630937393627
+Cost: 93.42260966252486
+Iteration 1200  Current estimate: y = 0.24887978144692746 * x +
+6.4624395617177575 Cost: 89.1186960257741
+Iteration 1300  Current estimate: y = 0.2394788921027732 * x + 6.914332531447661
+Cost: 85.03308442397321
+Iteration 1400  Current estimate: y = 0.23031951993710342 * x +
+7.354615970309725 Cost: 81.1547021957063
+Iteration 1500  Current estimate: y = 0.22139546015956607 * x + 7.78358813744051
+Cost: 77.47303830433049
+Iteration 1600  Current estimate: y = 0.21270066738637203 * x +
+8.201539629435043 Cost: 73.978114851384
+Iteration 1700  Current estimate: y = 0.20422925154499919 * x +
+8.608753577204295 Cost: 70.66046003488451
+Iteration 1800  Current estimate: y = 0.19597547388410835 * x +
+9.005505837775218 Cost: 67.51108247922933
+Iteration 1900  Current estimate: y = 0.18793374308596852 * x +
+9.392065181163254 Cost: 64.52144686712867
+Iteration 2000  Current estimate: y = 0.18009861147875597 * x +
+9.768693472443973 Cost: 61.68345080752916
+Iteration 2100  Current estimate: y = 0.17246477134616384 * x +
+10.135645849147087 Cost: 58.98940287683734
+Iteration 2200  Current estimate: y = 0.16502705133182075 * x +
+10.49317089409308 Cost: 56.43200177393041
+Iteration 2300  Current estimate: y = 0.15778041293608433 * x +
+10.841510803789433 Cost: 54.00431653246198
+Iteration 2400  Current estimate: y = 0.15071994710283232 * x +
+11.180901552500751 Cost: 51.699767736833195
+Iteration 2500  Current estimate: y = 0.14384087089394534 * x +
+11.51157305210364 Cost: 49.51210969092377
+Iteration 2600  Current estimate: y = 0.13713852424922274 * x +
+11.83374930783484 Cost: 47.435413491255616
+Iteration 2700  Current estimate: y = 0.13060836682954002 * x +
+12.147648570038065 Cost: 45.46405095871516
+Iteration 2800  Current estimate: y = 0.12424597494110912 * x +
+12.453483482012256 Cost: 43.59267938528758
+Iteration 2900  Current estimate: y = 0.1180470385387554 * x + 12.75146122406156
+Cost: 41.81622705446246
+Iteration 3000  Current estimate: y = 0.1120073583061843 * x +
+13.041783653844513 Cost: 40.12987949607034
+Iteration 3100  Current estimate: y = 0.10612284281125836 * x +
+13.324647443117522 Cost: 38.52906643829785
+Iteration 3200  Current estimate: y = 0.10038950573435818 * x +
+13.600244210965245 Cost: 37.00944942151987
+Iteration 3300  Current estimate: y = 0.09480346316794756 * x +
+13.868760653608263 Cost: 35.56691004037905
+Iteration 3400  Current estimate: y = 0.08936093098551674 * x +
+14.13037867087581 Cost: 34.197538782248216
+Iteration 3500  Current estimate: y = 0.08405822227812021 * x +
+14.38527548942927 Cost: 32.89762443182563
+Iteration 3600  Current estimate: y = 0.07889174485677004 * x +
+14.633623782820068 Cost: 31.663644013147067
+Iteration 3700  Current estimate: y = 0.07385799881899739 * x +
+14.875591788463034 Cost: 30.492253241757385
+Iteration 3800  Current estimate: y = 0.06895357417792916 * x +
+15.111343421604744 Cost: 29.380277461164045
+Iteration 3900  Current estimate: y = 0.06417514855227718 * x +
+15.341038386363806 Cost: 28.324703039010114
+Iteration 4000  Current estimate: y = 0.05951948491567277 * x +
+15.564832283918504 Cost: 27.32266919964799
+Iteration 4100  Current estimate: y = 0.054983429403823676 * x +
+15.782876717914935 Cost: 26.371460270979636
+Iteration 4200  Current estimate: y = 0.05056390917800591 * x +
+15.995319397167195 Cost: 25.468498324550364
+Iteration 4300  Current estimate: y = 0.04625793034344591 * x +
+16.202304235719033 Cost: 24.61133618895016
+Iteration 4400  Current estimate: y = 0.04206257592117959 * x +
+16.403971450334883 Cost: 23.797650817587442
+Iteration 4500  Current estimate: y = 0.03797500387201801 * x +
+16.600457655486228 Cost: 23.025236992860947
+Iteration 4600  Current estimate: y = 0.03399244517127736 * x +
+16.791895955897715 Cost: 22.292001349667036
+Iteration 4700  Current estimate: y = 0.03011220193297243 * x +
+16.97841603671564 Cost: 21.59595670204525
+Iteration 4800  Current estimate: y = 0.02633164558219874 * x +
+17.160144251360002 Cost: 20.935216657586057
+Iteration 4900  Current estimate: y = 0.022648215074472025 * x +
+17.337203707119407 Cost: 20.307990505005847
+Iteration 5000  Current estimate: y = 0.019059415160809594 * x +
+17.50971434854716 Cost: 19.712578361032325
+Iteration 5100  Current estimate: y = 0.015562814697386566 * x +
+17.677793038714672 Cost: 19.14736656344899
+Iteration 5200  Current estimate: y = 0.012156044998617692 * x +
+17.841553638377494 Cost: 18.610823297812168
+Iteration 5300  Current estimate: y = 0.008836798232548779 * x +
+18.001107083107485 Cost: 18.101494445988557
+Iteration 5400  Current estimate: y = 0.005602825857475189 * x +
+18.156561458443285 Cost: 17.61799964526266
+Iteration 5500  Current estimate: y = 0.002451937098720467 * x +
+18.308022073110305 Cost: 17.159028547332532
+Iteration 5600  Current estimate: y = -0.0006180025354489484 * x +
+18.455591530359474 Cost: 16.723337267056227
+Iteration 5700  Current estimate: y = -0.003609072699782113 * x +
+18.599369797473273 Cost: 16.309745011324004
+Iteration 5800  Current estimate: y = -0.006523299620854975 * x +
+18.7394542734861 Cost: 15.917130878920016
+Iteration 5900  Current estimate: y = -0.009362657469686548 * x +
+18.875939855164848 Cost: 15.544430822700528
+Iteration 6000  Current estimate: y = -0.01212906969909287 * x +
+19.00891900129435 Cost: 15.190634765855933
+Iteration 6100  Current estimate: y = -0.014824410346682842 * x +
+19.138481795311336 Cost: 14.854783864440767
+Iteration 6200  Current estimate: y = -0.01745050530437757 * x +
+19.26471600632918 Cost: 14.535967908753351
+Iteration 6300  Current estimate: y = -0.020009133555317988 * x +
+19.387707148595023 Cost: 14.233322856521475
+Iteration 6400  Current estimate: y = -0.022502028378990287 * x +
+19.507538539419137 Cost: 13.946028491209916
+Iteration 6500  Current estimate: y = -0.024930878525395356 * x +
+19.624291355616297 Cost: 13.673306199102067
+Iteration 6600  Current estimate: y = -0.02729732935904992 * x +
+19.738044688496974 Cost: 13.414416859132203
+Iteration 6700  Current estimate: y = -0.029602983973597435 * x +
+19.848875597445733 Cost: 13.16865883974921
+Iteration 6800  Current estimate: y = -0.03184940427778588 * x +
+19.95685916212332 Cost: 12.935366097382541
+Iteration 6900  Current estimate: y = -0.03403811205354281 * x +
+20.06206853332741 Cost: 12.713906371357744
+Iteration 7000  Current estimate: y = -0.036170589986868895 * x +
+20.16457498254686 Cost: 12.503679470368743
+Iteration 7100  Current estimate: y = -0.03824828267224864 * x +
+20.264447950242857 Cost: 12.304115645863241
+Iteration 7200  Current estimate: y = -0.040272597591253144 * x +
+20.36175509288956 Cost: 12.114674047933109
+Iteration 7300  Current estimate: y = -0.04224490606600518 * x +
+20.45656232880638 Cost: 11.934841259524408
+Iteration 7400  Current estimate: y = -0.04416654418814607 * x +
+20.548933882812644 Cost: 11.764129904995157
+Iteration 7500  Current estimate: y = -0.04603881372394046 * x +
+20.63893232973523 Cost: 11.602077329249084
+Iteration 7600  Current estimate: y = -0.04786298299612151 * x +
+20.72661863679814 Cost: 11.448244343866628
+Iteration 7700  Current estimate: y = -0.049640287743089706 * x +
+20.81205220492347 Cost: 11.302214036833613
+Iteration 7800  Current estimate: y = -0.0513719319560293 * x +
+20.89529090897092 Cost: 11.163590642643264
+Iteration 7900  Current estimate: y = -0.0530590886945251 * x +
+20.976391136943796 Cost: 11.031998469708139
+Maximum number of iterations reached. Stopping training
+    \end{Verbatim}
+
+    \hypertarget{training-analysis}{%
+\subsection{Training Analysis}\label{training-analysis}}
+
+In the preceding output, we're printing an estimate of weights and the
+calculated cost at each iteration.
+
+The final line in the output shows that the model stopped training
+because it reached its maximum allowed number of iterations, but the
+cost could still be lower if we had let it run longer.
+
+Let's plot the model at the end of this training:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot the data and trendline after training}
+\PY{n}{graphing}\PY{o}{.}\PY{n}{scatter\PYZus{}2D}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{month\PYZus{}old\PYZus{}when\PYZus{}trained}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}rescues\PYZus{}per\PYZus{}year}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{trendline}\PY{o}{=}\PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    
+    
+    The preceding plot tells us that the younger a dog begins training, the
+more rescues it be perform in a year.
+
+Notice that it doesn't fit the data very well (most points are above the
+line). That's due to training being cut off early, before the model
+could find the optimal weights.
+
+\hypertarget{standardizing-data}{%
+\subsection{Standardizing data}\label{standardizing-data}}
+
+Let's use \emph{standardization} as the form of \emph{feature scaling}
+for this model, applying it to the \texttt{month\_old\_when\_trained}
+feature:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Add the standardized verions of \PYZdq{}age\PYZus{}when\PYZus{}trained\PYZdq{} to the dataset.}
+\PY{c+c1}{\PYZsh{} Notice that it \PYZdq{}centers\PYZdq{} the mean age around 0}
+\PY{n}{data}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{standardized\PYZus{}age\PYZus{}when\PYZus{}trained}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{month\PYZus{}old\PYZus{}when\PYZus{}trained} \PY{o}{\PYZhy{}} \PY{n}{numpy}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{month\PYZus{}old\PYZus{}when\PYZus{}trained}\PY{p}{)}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{numpy}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{month\PYZus{}old\PYZus{}when\PYZus{}trained}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Print a sample of the new dataset}
+\PY{n}{data}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   month\_old\_when\_trained  mean\_rescues\_per\_year  age\_last\_year  \textbackslash{}
+0                      68                   21.1              9
+1                      53                   14.9              5
+2                      41                   20.5              6
+3                       3                   19.4              1
+4                       4                   24.9              4
+
+   weight\_last\_year  rescues\_last\_year  standardized\_age\_when\_trained
+0              14.5                 35                       1.537654
+1              14.0                 30                       0.826655
+2              17.7                 34                       0.257856
+3              13.7                 29                      -1.543342
+4              18.4                 30                      -1.495942
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Notice the the values \texttt{standardized\_age\_when\_trained} column
+above are distributed in a much smaller range (between -2 and 2) and
+have their mean centered around \texttt{0}.
+
+\hypertarget{visualizing-scaled-features}{%
+\subsection{Visualizing Scaled
+Features}\label{visualizing-scaled-features}}
+
+Let's use a box plot to compare the original feature values to their
+standardized versions:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{plotly}\PY{n+nn}{.}\PY{n+nn}{subplots} \PY{k+kn}{import} \PY{n}{make\PYZus{}subplots}
+\PY{k+kn}{import} \PY{n+nn}{plotly}\PY{n+nn}{.}\PY{n+nn}{graph\PYZus{}objects} \PY{k}{as} \PY{n+nn}{go}
+\PY{k+kn}{import} \PY{n+nn}{plotly}\PY{n+nn}{.}\PY{n+nn}{express} \PY{k}{as} \PY{n+nn}{px}
+
+\PY{n}{fig} \PY{o}{=} \PY{n}{px}\PY{o}{.}\PY{n}{box}\PY{p}{(}\PY{n}{data}\PY{p}{,}\PY{n}{y}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{month\PYZus{}old\PYZus{}when\PYZus{}trained}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{standardized\PYZus{}age\PYZus{}when\PYZus{}trained}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{fig}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    Now, compare the two features by hovering your mouse over the graph.
+You'll note that:
+
+\begin{itemize}
+\item
+  \texttt{month\_old\_when\_trained} ranges from 1 to 71 and has its
+  median centered around 35.
+\item
+  \texttt{standardized\_age\_when\_trained} ranges from -1.6381 to
+  1.6798, and is centered exactly at 0.
+\end{itemize}
+
+\hypertarget{training-with-standardized-features}{%
+\subsection{Training with standardized
+features}\label{training-with-standardized-features}}
+
+We can now retrain our model using the standardized feature in our
+dataset:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Let\PYZsq{}s retrain our model, this time using the standardized feature}
+\PY{n}{model\PYZus{}norm} \PY{o}{=} \PY{n}{gradient\PYZus{}descent}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{standardized\PYZus{}age\PYZus{}when\PYZus{}trained}\PY{p}{,} \PY{n}{data}\PY{o}{.}\PY{n}{mean\PYZus{}rescues\PYZus{}per\PYZus{}year}\PY{p}{,} \PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{5E\PYZhy{}4}\PY{p}{,} \PY{n}{number\PYZus{}of\PYZus{}iterations}\PY{o}{=}\PY{l+m+mi}{8000}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration 0  Current estimate: y = -0.0024692716955674794 * x + 0.01989 Cost:
+409.47558290398973
+Iteration 100  Current estimate: y = -0.23732823396711042 * x +
+1.9116805097144178 Cost: 336.7707406040323
+Iteration 200  Current estimate: y = -0.44982677870967736 * x +
+3.623357706888266 Cost: 277.25100655774355
+Iteration 300  Current estimate: y = -0.6420937932658428 * x + 5.172069793284766
+Cost: 228.52524594986943
+Iteration 400  Current estimate: y = -0.8160554781852586 * x + 6.573332327196407
+Cost: 188.63595906277715
+Iteration 500  Current estimate: y = -0.9734546445990154 * x + 7.841183663924317
+Cost: 155.98064104392154
+Iteration 600  Current estimate: y = -1.1158681743324264 * x + 8.988325597103358
+Cost: 129.2474031715326
+Iteration 700  Current estimate: y = -1.2447228176779612 * x +
+10.026250609868583 Cost: 107.36226927912767
+Iteration 800  Current estimate: y = -1.3613094870961389 * x +
+10.965357010711454 Cost: 89.4460300351272
+Iteration 900  Current estimate: y = -1.4667961900438482 * x +
+11.815053107498303 Cost: 74.77892174936699
+Iteration 1000  Current estimate: y = -1.5622397304958522 * x +
+12.583851463304214 Cost: 62.77171071939299
+Iteration 1100  Current estimate: y = -1.6485962963895548 * x +
+13.279454178351337 Cost: 52.94202146440175
+Iteration 1200  Current estimate: y = -1.7267310390618835 * x +
+13.90883005243694 Cost: 44.89495786166457
+Iteration 1300  Current estimate: y = -1.7974267406485576 * x +
+14.47828440089243 Cost: 38.30723866254352
+Iteration 1400  Current estimate: y = -1.8613916562788746 * x +
+14.993522223514704 Cost: 32.91421005124921
+Iteration 1500  Current estimate: y = -1.9192666096319773 * x +
+15.45970535931931 Cost: 28.499213491268268
+Iteration 1600  Current estimate: y = -1.971631412940436 * x +
+15.881504199712152 Cost: 24.884881725287745
+Iteration 1700  Current estimate: y = -2.019010675759084 * x +
+16.263144478161266 Cost: 21.926013255720328
+Iteration 1800  Current estimate: y = -2.0618790606934327 * x +
+16.608449605124306 Cost: 19.503739046527745
+Iteration 1900  Current estimate: y = -2.100666038741482 * x + 16.92087897235858
+Cost: 17.52074710049588
+Iteration 2000  Current estimate: y = -2.135760191889627 * x + 17.20356261035985
+Cost: 15.897373065011356
+Iteration 2100  Current estimate: y = -2.1675131060676733 * x +
+17.459332546140928 Cost: 14.568399811055967
+Iteration 2200  Current estimate: y = -2.1962428934639444 * x +
+17.69075117550343 Cost: 13.480437412296949
+Iteration 2300  Current estimate: y = -2.2222373794883374 * x +
+17.90013693404643 Cost: 12.589778268036145
+Iteration 2400  Current estimate: y = -2.245756986311467 * x +
+18.089587524093606 Cost: 11.860641202122503
+Iteration 2500  Current estimate: y = -2.2670373418682375 * x +
+18.26100093023434 Cost: 11.263733996582848
+Iteration 2600  Current estimate: y = -2.2862916404637894 * x +
+18.41609443402049 Cost: 10.77507661146044
+Iteration 2700  Current estimate: y = -2.3037127786312275 * x +
+18.55642181831455 Cost: 10.375037815113883
+Iteration 2800  Current estimate: y = -2.319475287638908 * x +
+18.683388933648818 Cost: 10.047546522738752
+Iteration 2900  Current estimate: y = -2.3337370820078647 * x +
+18.798267782544944 Cost: 9.779446159571398
+Iteration 3000  Current estimate: y = -2.3466410415566474 * x +
+18.902209262895628 Cost: 9.559966111081636
+Iteration 3100  Current estimate: y = -2.3583164428230607 * x +
+18.996254698076292 Cost: 9.380289026291589
+Iteration 3200  Current estimate: y = -2.368880254203313 * x +
+19.081346269299672 Cost: 9.233196591144045
+Iteration 3300  Current estimate: y = -2.378438307783756 * x +
+19.158336454728143 Cost: 9.112779541285361
+Iteration 3400  Current estimate: y = -2.3870863596050333 * x +
+19.22799656990864 Cost: 9.014200264369299
+Iteration 3500  Current estimate: y = -2.3949110489807546 * x +
+19.291024495090983 Cost: 8.933498454711119
+Iteration 3600  Current estimate: y = -2.4019907664815117 * x +
+19.34805166684485 Cost: 8.867432012697627
+Iteration 3700  Current estimate: y = -2.40839643927998 * x + 19.399649404019865
+Cost: 8.813346797275454
+Iteration 3800  Current estimate: y = -2.414192241725016 * x + 19.44633463142465
+Cost: 8.769069998977995
+Iteration 3900  Current estimate: y = -2.4194362382635046 * x +
+19.488575058566685 Cost: 8.73282284987875
+Iteration 4000  Current estimate: y = -2.4241809651510193 * x +
+19.526793865335563 Cost: 8.703149163696683
+Iteration 4100  Current estimate: y = -2.4284739567790457 * x +
+19.56137394157209 Cost: 8.678856835237426
+Iteration 4200  Current estimate: y = -2.432358221891709 * x +
+19.592661722997484 Cost: 8.658969948978951
+Iteration 4300  Current estimate: y = -2.435872674462953 * x +
+19.620970661931807 Cost: 8.642689572821464
+Iteration 4400  Current estimate: y = -2.439052523550819 * x +
+19.646584367572686 Cost: 8.629361661936674
+Iteration 4500  Current estimate: y = -2.441929626034527 * x +
+19.669759447295053 Cost: 8.618450783291436
+Iteration 4600  Current estimate: y = -2.4445328057682274 * x +
+19.690728077436592 Cost: 8.609518605259927
+Iteration 4700  Current estimate: y = -2.446888142348805 * x +
+19.709700329324388 Cost: 8.60220628816974
+Iteration 4800  Current estimate: y = -2.4490192323907216 * x +
+19.72686627384553 Cost: 8.59622006834308
+Iteration 4900  Current estimate: y = -2.4509474259254413 * x +
+19.742397885646056 Cost: 8.591319456488982
+Iteration 5000  Current estimate: y = -2.452692040293772 * x +
+19.756450766035165 Cost: 8.587307576330902
+Iteration 5100  Current estimate: y = -2.4542705536739757 * x +
+19.769165701855563 Cost: 8.58402325533548
+Iteration 5200  Current estimate: y = -2.455698780184497 * x +
+19.780670075936904 Cost: 8.581334549796948
+Iteration 5300  Current estimate: y = -2.456991028315518 * x +
+19.791079143263175 Cost: 8.579133444155014
+Iteration 5400  Current estimate: y = -2.458160244276587 * x +
+19.800497185638758 Cost: 8.577331511597684
+Iteration 5500  Current estimate: y = -2.459218141696443 * x + 19.80901855642137
+Cost: 8.575856361618827
+Iteration 5600  Current estimate: y = -2.46017531897438 * x + 19.816728625788134
+Cost: 8.574648731815332
+Iteration 5700  Current estimate: y = -2.4610413654588523 * x +
+19.82370463600485 Cost: 8.573660107090257
+Model training complete after 5700 iterations
+    \end{Verbatim}
+
+    Let's take a look at that output again.
+
+Despite still being allowed a maximum of 8000 iterations, the model
+stopped at the 5700 mark.
+
+Why? Because this time, using the standardized feature, it was quickly
+able to reach a point where the cost could no longer be improved.
+
+In other words, it ``converged'' much faster than the previous version.
+
+\hypertarget{plotting-the-standardized-model}{%
+\subsection{Plotting the standardized
+model}\label{plotting-the-standardized-model}}
+
+We can now plot the new model and see the results of standardization:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot the data and trendline again, after training with standardized feature}
+\PY{n}{graphing}\PY{o}{.}\PY{n}{scatter\PYZus{}2D}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{standardized\PYZus{}age\PYZus{}when\PYZus{}trained}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}rescues\PYZus{}per\PYZus{}year}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{trendline}\PY{o}{=}\PY{n}{model\PYZus{}norm}\PY{o}{.}\PY{n}{predict}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    It looks like this model fits the data much better that the first one!
+
+The standardized model shows a larger slope and data now centered on
+\texttt{0} on the X-axis, both factors which should allow the model to
+converge faster.
+
+But how much faster?
+
+Let's plot a comparison between models to visualize the improvements.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cost1} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{cost\PYZus{}history}
+\PY{n}{cost2} \PY{o}{=} \PY{n}{model\PYZus{}norm}\PY{o}{.}\PY{n}{cost\PYZus{}history}
+
+\PY{c+c1}{\PYZsh{} Creates dataframes with the cost history for each model}
+\PY{n}{df1} \PY{o}{=} \PY{n}{pandas}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cost}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{cost1}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Model}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No feature scaling}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{df1}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of iterations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df1}\PY{o}{.}\PY{n}{index} \PY{o}{+} \PY{l+m+mi}{1}
+\PY{n}{df2} \PY{o}{=} \PY{n}{pandas}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cost}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{cost2}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Model}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{With feature scaling}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{n}{df2}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of iterations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df2}\PY{o}{.}\PY{n}{index} \PY{o}{+} \PY{l+m+mi}{1}
+
+\PY{c+c1}{\PYZsh{} Concatenate dataframes into a single one that we can use in our plot}
+\PY{n}{df} \PY{o}{=} \PY{n}{pandas}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{df1}\PY{p}{,} \PY{n}{df2}\PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Plot cost history for both models}
+\PY{n}{fig} \PY{o}{=} \PY{n}{graphing}\PY{o}{.}\PY{n}{scatter\PYZus{}2D}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{label\PYZus{}x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{number of iterations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label\PYZus{}y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cost}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training Cost vs Iterations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label\PYZus{}colour}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Model}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{fig}\PY{o}{.}\PY{n}{update\PYZus{}traces}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lines}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{fig}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    
+    This plot clearly shows that using a standardized dataset allowed our
+model to converge much faster. Reaching the lowest cost and finding the
+optimal weights required a much smaller number of iterations.
+
+This is very important when you are developing a new model, because it
+allows you to iterate quicker; but also when your model is deployed to a
+production environment, because it requires less compute time for
+training and costs less than a ``slow'' model.
+
+    \hypertarget{summary}{%
+\subsection{Summary}\label{summary}}
+
+In this exercise, we covered the following concepts:
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Feature scaling} techniques are used to improve the efficiency
+  of training models
+\item
+  How to add a standardized feature to a dataset
+\item
+  How to visualize standardized features and compare them to their
+  original values
+\end{itemize}
+
+Finally, we compared the performance of models before and after using
+standardized features, using plots to visualize the improvements.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
